@@ -1,25 +1,47 @@
-import { Manager } from "Manager"
 import { Message } from "Types"
+import { Processor } from "Processor"
+import { Manager } from "Manager"
 
-export abstract class ConsumerProcessor {
-  abstract retireveNextMessage: () => Message | undefined
+abstract class Consumer {
+  public abstract retireveNextMessage(): Message | undefined
+  public abstract archiveMessage(message: Message): void
+  public abstract rejectMessage (message: Message): void
+  public abstract destroy(): void
 }
 
-class Consumer {
-  private processTickInterval: NodeJS.Timeout
+export abstract class BaseConsumer implements Consumer {
+  public abstract retireveNextMessage(): Message | undefined
+  public abstract archiveMessage(message: Message): void
+  public abstract rejectMessage (message: Message): void
 
-  constructor(processor: ConsumerProcessor) {
-    this.processTickInterval = setInterval(() => {
-      const message = processor.retireveNextMessage()
-      if (message) {
-        console.log("consumed =>", message)
-      }
-      Manager.sharedInstance.print()
-    }, Number(process.env.CONSUMER_PROCESS_TICK))
+  private consumeTickInterval: NodeJS.Timeout
+  constructor() {
+    this.consumeTickInterval = setInterval(
+      this.consumeMessage.bind(this),
+      Number(process.env.CONSUMER_PROCESS_TICK),
+    )
   }
 
   public destroy() {
-    clearInterval(this.processTickInterval)
+    clearInterval(this.consumeTickInterval)
+  }
+
+  private consumeMessage() {
+    const message = this.retireveNextMessage()
+    if (message) {
+      console.log("consuming =>", message)
+
+      try {
+        Processor.sharedInstance.process(message)
+        this.archiveMessage(message)
+      } catch (_) {
+        this.rejectMessage(message)
+      }
+    }
+
+    Manager.sharedInstance.print()
+    Manager.sharedInstance.printArchive()
+    Manager.sharedInstance.printDeadLetter()
   }
 }
 
