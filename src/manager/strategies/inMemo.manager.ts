@@ -1,7 +1,7 @@
 import { Message } from "Types"
 
+import { Consumer, InMemoConsumerStrategy } from "Consumer"
 import { InMemoProducerStrategy, Producer } from "Producer"
-import { Consumer, InMemoConsumerProcessorStrategy } from "Consumer"
 
 import Manager from "../manager"
 
@@ -9,10 +9,13 @@ class InMemoManager implements Manager {
   public readonly producer: Producer
   public readonly consumers: Consumer[]
 
-  constructor(private messages: Message[] = []) {
+  constructor(
+    private messages: Message[] = [],
+    private archive: Message[] = [],
+    private deadLetter: Message[] = [],
+  ) {
     this.producer = new InMemoProducerStrategy(messages)
-    const consumerProcessor = new InMemoConsumerProcessorStrategy(messages)
-    this.consumers = [new Consumer(consumerProcessor)]
+    this.consumers = [new InMemoConsumerStrategy(messages, archive, deadLetter)]
   }
 
   public clear() {
@@ -21,6 +24,14 @@ class InMemoManager implements Manager {
 
   public print() {
     console.log("Current stack =>", this.messages)
+  }
+
+  public printArchive() {
+    console.log("Current archive =>", this.archive)
+  }
+
+  public printDeadLetter() {
+    console.log("Current deadLetter =>", this.deadLetter)
   }
 
   public printConfig() {

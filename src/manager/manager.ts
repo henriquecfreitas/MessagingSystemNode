@@ -9,6 +9,8 @@ abstract class Manager {
 
   public abstract clear(): void
   public abstract print(): void
+  public abstract printArchive(): void
+  public abstract printDeadLetter(): void
   public abstract printConfig(): void
 }
 
