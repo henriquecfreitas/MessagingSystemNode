@@ -1,15 +1,15 @@
 import Producer from "../producer";
 
 class MongoProducer implements Producer {
-  public publish(): void {
+  public publish() {
     throw new Error("Method not implemented.")
   }
 
-  public publishHttp(): void {
+  public publishHttp() {
     throw new Error("Method not implemented.")
   }
 
-  public publishHttps(): void {
+  public publishHttps() {
     throw new Error("Method not implemented.")
   }
 }

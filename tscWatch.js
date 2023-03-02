@@ -15,7 +15,7 @@ watch.on('compile_errors', () => {
 try {
   watch.start(
     '--onFirstSuccess',
-    'node --experimental-specifier-resolution=node lib/index.js --watch',
+    'node --experimental-specifier-resolution=node --watch lib/index.js',
     '--noClear',
     '--project',
     './tsconfig.json',

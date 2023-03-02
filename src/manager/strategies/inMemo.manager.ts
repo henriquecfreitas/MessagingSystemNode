@@ -1,20 +1,29 @@
 import { Message } from "Types"
 
+import { InMemoProducerStrategy, Producer } from "Producer"
+import { Consumer, InMemoConsumerProcessorStrategy } from "Consumer"
+
 import Manager from "../manager"
 
 class InMemoManager implements Manager {
-  private messages: Message[]
-  constructor(messages: Message[]) {
-    this.messages = messages
+  public readonly producer: Producer
+  public readonly consumers: Consumer[]
+
+  constructor(private messages: Message[] = []) {
+    this.producer = new InMemoProducerStrategy(messages)
+    const consumerProcessor = new InMemoConsumerProcessorStrategy(messages)
+    this.consumers = [new Consumer(consumerProcessor)]
   }
 
-  public clear(): void {
+  public clear() {
     throw new Error('Method not implemented.')
   }
-  public print(): void {
-    console.log(this.messages)
+
+  public print() {
+    console.log("Current stack =>", this.messages)
   }
-  public printConfig(): void {
+
+  public printConfig() {
     throw new Error('Method not implemented.')
   }
 }

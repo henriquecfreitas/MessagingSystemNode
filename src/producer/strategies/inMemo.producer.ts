@@ -4,15 +4,12 @@ import { Message, TransferProtocol } from "Types"
 import Producer, { PublishParams } from "../producer"
 
 class InMemoProducer implements Producer {
-  private messages: Message[]
-  constructor(messages: Message[]) {
-    this.messages = messages
-  }
+  constructor(private messages: Message[]) {}
 
   public publish({
     senderId,
     content
-  }: PublishParams): void {
+  }: PublishParams) {
     const contentLenght = 1
 
     this.messages.push({
@@ -30,7 +27,7 @@ class InMemoProducer implements Producer {
     senderId,
     senderAddress,
     content
-  }: PublishParams): void {
+  }: PublishParams) {
     const contentLenght = 1
 
     this.messages.push({
@@ -49,7 +46,7 @@ class InMemoProducer implements Producer {
     senderId,
     senderAddress,
     content
-  }: PublishParams): void {
+  }: PublishParams) {
     const contentLenght = 1
 
     this.messages.push({

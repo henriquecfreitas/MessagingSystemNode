@@ -5,7 +5,6 @@ export type PublishParams = {
 }
 
 abstract class Producer {
-  static sharedInstance: Producer
   public abstract publish(params: PublishParams): void
   public abstract publishHttp(params: PublishParams): void
   public abstract publishHttps(params: PublishParams): void
