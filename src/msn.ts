@@ -9,31 +9,22 @@ import {
   MongoManagerStrategy,
 } from 'Manager'
 
-import {
-  Producer,
-  InMemoProducerStrategy,
-  MongoProducerStrategy,
-} from 'Producer'
-
 dotEnvConfig()
 
 switch (process.env.STORAGE_STRATEGY) {
   case "IN_MEMO":
-    const messages = []
-    Manager.sharedInstance = new InMemoManagerStrategy(messages)
-    Producer.sharedInstance = new InMemoProducerStrategy(messages)
+    Manager.sharedInstance = new InMemoManagerStrategy()
     break
   case "MONGO":
     Manager.sharedInstance = new MongoManagerStrategy()
-    Producer.sharedInstance = new MongoProducerStrategy()
     break
 }
 
-export const publish = Producer.sharedInstance.publish
+export const { publish } = Manager.sharedInstance.producer
 
 process.env.SERVE_HTTP === "TRUE" &&
   createServer((req, res) => {
-    Producer.sharedInstance.publishHttp({
+    Manager.sharedInstance.producer.publishHttp({
       senderId: 'test',
       content: "http message - teste"
     })
@@ -46,7 +37,7 @@ process.env.SERVE_HTTP === "TRUE" &&
 
 process.env.SERVE_HTTPS === "TRUE" &&
   createHttpsServer((req, res) => {
-    Producer.sharedInstance.publishHttps({
+    Manager.sharedInstance.producer.publishHttps({
       senderId: 'test-https',
       content: "https message"
     })
