@@ -1,4 +1,4 @@
-import { Message } from "Types"
+import { Message, RejectedMessage } from "Types"
 
 import { Consumer, InMemoConsumerStrategy } from "Consumer"
 import { InMemoProducerStrategy, Producer } from "Producer"
@@ -12,7 +12,7 @@ class InMemoManager implements Manager {
   constructor(
     private messages: Message[] = [],
     private archive: Message[] = [],
-    private deadLetter: Message[] = [],
+    private deadLetter: RejectedMessage[] = [],
   ) {
     this.producer = new InMemoProducerStrategy(messages)
     this.consumers = [new InMemoConsumerStrategy(messages, archive, deadLetter)]

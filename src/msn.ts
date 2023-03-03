@@ -1,13 +1,13 @@
-import { config as dotEnvConfig } from 'dotenv'
-
 import { createServer } from 'node:http'
 import { createServer as createHttpsServer } from 'node:https'
+import { config as dotEnvConfig } from 'dotenv'
 
 import {
   Manager,
   InMemoManagerStrategy,
   MongoManagerStrategy,
 } from 'Manager'
+import { InvalidParamsError, handleRequest } from 'requestHandler'
 
 dotEnvConfig()
 
@@ -23,12 +23,21 @@ switch (process.env.STORAGE_STRATEGY) {
 export const { publish } = Manager.sharedInstance.producer
 
 process.env.SERVE_HTTP === "TRUE" &&
-  createServer((req, res) => {
-    Manager.sharedInstance.producer.publishHttp({
-      senderId: 'test',
-      content: "http message - teste"
-    })
-    Manager.sharedInstance.print()
+  createServer(async (req, res) => {
+    try {
+      await handleRequest(req)
+      Manager.sharedInstance.print()
+      res.statusCode = 201
+      res.end()
+    } catch (error) {
+      if (error instanceof InvalidParamsError) {
+        res.statusCode = 422
+        res.end(error.message)
+        return
+      }
+      res.statusCode = 500
+      res.end()
+    }
   })
   .listen(Number(process.env.HTTP_PORT))
   .on("listening", () => {
@@ -36,12 +45,21 @@ process.env.SERVE_HTTP === "TRUE" &&
   })
 
 process.env.SERVE_HTTPS === "TRUE" &&
-  createHttpsServer((req, res) => {
-    Manager.sharedInstance.producer.publishHttps({
-      senderId: 'test-https',
-      content: "https message"
-    })
-    Manager.sharedInstance.print()
+  createServer(async (req, res) => {
+    try {
+      await handleRequest(req)
+      Manager.sharedInstance.print()
+      res.statusCode = 201
+      res.end()
+    } catch (error) {
+      if (error instanceof InvalidParamsError) {
+        res.statusCode = 422
+        res.end(error.message)
+        return
+      }
+      res.statusCode = 500
+      res.end()
+    }
   })
   .listen(Number(process.env.HTTPS_PORT))
   .on("listening", () => {

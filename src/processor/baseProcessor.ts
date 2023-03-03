@@ -36,6 +36,8 @@ class BaseProcessor implements Processor {
       case ProcessorKind.Rest:
         this.restProcessor.process(message)
         break
+      default:
+        throw new Error("Invalid processor")
     }
   }
 }
