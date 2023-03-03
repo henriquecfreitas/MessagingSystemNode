@@ -1,7 +1,10 @@
+import { ProcessorKind } from "Types"
+
 export type PublishParams = {
+  processor: ProcessorKind,
   senderId: string | number,
   senderAddress?: string,
-  content: any,
+  content: Object,
 }
 
 abstract class Producer {

@@ -7,6 +7,7 @@ class InMemoProducer implements Producer {
   constructor(private messages: Message[]) {}
 
   public publish({
+    processor,
     senderId,
     content
   }: PublishParams) {
@@ -14,6 +15,7 @@ class InMemoProducer implements Producer {
 
     this.messages.push({
       id: nanoid(13),
+      processor,
       origin: {
         senderId,
         transferProtocol: TransferProtocol.Application,
@@ -24,6 +26,7 @@ class InMemoProducer implements Producer {
   }
 
   public publishHttp({
+    processor,
     senderId,
     senderAddress,
     content
@@ -32,6 +35,7 @@ class InMemoProducer implements Producer {
 
     this.messages.push({
       id: nanoid(13),
+      processor,
       origin: {
         senderId,
         senderAddress,
@@ -43,6 +47,7 @@ class InMemoProducer implements Producer {
   }
 
   public publishHttps({
+    processor,
     senderId,
     senderAddress,
     content
@@ -51,6 +56,7 @@ class InMemoProducer implements Producer {
 
     this.messages.push({
       id: nanoid(13),
+      processor,
       origin: {
         senderId,
         senderAddress,

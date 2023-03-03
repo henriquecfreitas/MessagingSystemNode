@@ -1,5 +1,5 @@
 import { Message } from "Types"
-import { Processor } from "Processor"
+import { BaseProcessor } from "Processor"
 import { Manager } from "Manager"
 
 abstract class Consumer {
@@ -32,7 +32,7 @@ export abstract class BaseConsumer implements Consumer {
       console.log("consuming =>", message)
 
       try {
-        Processor.sharedInstance.process(message)
+        BaseProcessor.sharedInstance.process(message)
         this.archiveMessage(message)
       } catch (_) {
         this.rejectMessage(message)
