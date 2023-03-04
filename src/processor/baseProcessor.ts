@@ -19,23 +19,18 @@ class BaseProcessor implements Processor {
   private pushNtfProcessor = new PushNotificationProcessor()
   private restProcessor = new RestProcessor()
 
-  public process(message: Message) {
+  public async process(message: Message) {
     switch (message.processor) {
       case ProcessorKind.Email:
-        this.emailProcessor.process(message)
-        break
+        return this.emailProcessor.process(message)
       case ProcessorKind.FileSystem:
-        this.fsProcessor.process(message)
-        break
+        return this.fsProcessor.process(message)
       case ProcessorKind.GraphQL:
-        this.gqlProcessor.process(message)
-        break
+        return this.gqlProcessor.process(message)
       case ProcessorKind.PushNotification:
-        this.pushNtfProcessor.process(message)
-        break
+        return this.pushNtfProcessor.process(message)
       case ProcessorKind.Rest:
-        this.restProcessor.process(message)
-        break
+        return this.restProcessor.process(message)
       default:
         throw new Error("Invalid processor")
     }
