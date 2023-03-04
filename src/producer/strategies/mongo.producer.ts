@@ -8,10 +8,6 @@ class MongoProducer implements Producer {
   public publishHttp() {
     throw new Error("Method not implemented.")
   }
-
-  public publishHttps() {
-    throw new Error("Method not implemented.")
-  }
 }
 
 export default MongoProducer

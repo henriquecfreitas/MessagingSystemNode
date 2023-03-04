@@ -11,8 +11,6 @@ class InMemoProducer implements Producer {
     senderId,
     content
   }: PublishParams) {
-    const contentLenght = 1
-
     this.messages.push({
       id: nanoid(13),
       processor,
@@ -21,49 +19,27 @@ class InMemoProducer implements Producer {
         transferProtocol: TransferProtocol.Application,
       },
       content,
-      contentLenght,
     })
   }
 
-  public publishHttp({
-    processor,
-    senderId,
-    senderAddress,
-    content
-  }: PublishParams) {
-    const contentLenght = 1
-
+  public publishHttp(
+    {
+      processor,
+      senderId,
+      senderAddress,
+      content
+    }: PublishParams,
+    transferProtocol: TransferProtocol
+  ) {
     this.messages.push({
       id: nanoid(13),
       processor,
       origin: {
         senderId,
         senderAddress,
-        transferProtocol: TransferProtocol.HTTP
+        transferProtocol,
       },
       content,
-      contentLenght,
-    })
-  }
-
-  public publishHttps({
-    processor,
-    senderId,
-    senderAddress,
-    content
-  }: PublishParams) {
-    const contentLenght = 1
-
-    this.messages.push({
-      id: nanoid(13),
-      processor,
-      origin: {
-        senderId,
-        senderAddress,
-        transferProtocol: TransferProtocol.HTTPS
-      },
-      content,
-      contentLenght,
     })
   }
 }

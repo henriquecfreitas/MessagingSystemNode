@@ -10,7 +10,6 @@ type Message = {
     transferProtocol: TransferProtocol,
   },
   content: Object,
-  contentLenght: number,
 }
 
 export default Message

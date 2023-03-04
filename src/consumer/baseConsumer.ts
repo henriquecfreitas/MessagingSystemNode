@@ -1,4 +1,4 @@
-import { Message } from "Types"
+import { Message, ProcessResponse } from "Types"
 import { BaseProcessor } from "Processor"
 import { Manager } from "Manager"
 
@@ -6,7 +6,7 @@ import Consumer from "./consumer"
 
 abstract class BaseConsumer implements Consumer {
   public abstract retireveNextMessage(): Message | undefined
-  public abstract archiveMessage(message: Message): void
+  public abstract archiveMessage(message: Message, response: ProcessResponse): void
   public abstract rejectMessage(message: Message, error: unknown): void
 
   private consumeTickInterval: NodeJS.Timeout
@@ -21,14 +21,14 @@ abstract class BaseConsumer implements Consumer {
     clearInterval(this.consumeTickInterval)
   }
 
-  private consumeMessage() {
+  private async consumeMessage() {
     const message = this.retireveNextMessage()
     if (message) {
       console.log("consuming =>", message)
 
       try {
-        BaseProcessor.sharedInstance.process(message)
-        this.archiveMessage(message)
+        const response = await BaseProcessor.sharedInstance.process(message)
+        this.archiveMessage(message, response)
       } catch (error) {
         this.rejectMessage(message, error)
       }

@@ -1,4 +1,4 @@
-import { Message } from "Types"
+import { Message, ProcessResponse } from "Types"
 
 import BaseConsumer from "../baseConsumer"
 
@@ -7,7 +7,7 @@ class MongoConsumer extends BaseConsumer {
     throw new Error('Method not implemented.')
   }
 
-  public archiveMessage(_: Message) {
+  public archiveMessage(_: Message, __: ProcessResponse) {
     throw new Error('Method not implemented.')
   }
 
