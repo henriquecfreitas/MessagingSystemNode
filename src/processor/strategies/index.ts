@@ -1,0 +1,5 @@
+export {default as EmailProcessor } from "./email.processor"
+export {default as FileSystemProcessor } from "./fileSystem.processor"
+export {default as GraphQLProcessor } from "./graphql.processor"
+export {default as PushNotificationProcessor } from "./pushNotification.processor"
+export {default as RestProcessor } from "./rest.processor"
