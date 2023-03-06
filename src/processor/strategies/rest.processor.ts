@@ -49,7 +49,8 @@ class RestProcessor implements Processor {
     console.log("REST | processing =>", message)
     const { content } = message
 
-    if (!content["url"]) throw new RestProcessorError("Missing URL on message content")
+    if (!content["url"])
+      throw new RestProcessorError("Missing URL on message content")
     if (!content["method"])
       throw new RestProcessorError("Missing REST method on message content")
     
