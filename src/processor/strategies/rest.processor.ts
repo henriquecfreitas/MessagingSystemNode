@@ -10,8 +10,9 @@ class RestProcessorError extends Error {}
 const sendRequest = (
   url: URL,
   options: RequestOptions,
+  reqData?: string,
 ) => new Promise<ProcessResponse>((resolve, reject) => {
-  request(url, options, async response => {
+  const req = request(url, options, async response => {
     response.setEncoding('utf8')
 
     response.on('error', reject)
@@ -36,7 +37,11 @@ const sendRequest = (
 
     strResponse += Buffer.concat(chunks).toString()
     resolve(strResponse)
-  }).end()
+  })
+  if (reqData) {
+    req.write(reqData)
+  }
+  req.end()
 })
 
 class RestProcessor implements Processor {
@@ -44,7 +49,8 @@ class RestProcessor implements Processor {
     console.log("REST | processing =>", message)
     const { content } = message
 
-    if (!content["url"]) throw new RestProcessorError("Missing URL on message content")
+    if (!content["url"])
+      throw new RestProcessorError("Missing URL on message content")
     if (!content["method"])
       throw new RestProcessorError("Missing REST method on message content")
     
@@ -52,10 +58,13 @@ class RestProcessor implements Processor {
     const options = {
       method: content["method"],
       headers: content["headers"],
-      body: content["body"],
     }
 
-    return await sendRequest(url, options)
+    return await sendRequest(
+      url,
+      options,
+      content["body"] ? JSON.stringify(content["body"]) : undefined,
+    )
   }
 }
 
