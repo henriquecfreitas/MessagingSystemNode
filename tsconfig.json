@@ -24,7 +24,8 @@
       "Consumer": ["./consumer/index.ts"],
       "Manager": ["./manager/index.ts"],
       "Processor": ["./processor/index.ts"],
-      "Producer": ["./producer/index.ts"]
+      "Producer": ["./producer/index.ts"],
+      "Utils": ["./utils/index.ts"]
     }
   },
   "include": ["./src/**/*.ts"],

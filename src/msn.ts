@@ -8,12 +8,11 @@ import {
   MongoManagerStrategy,
 } from 'Manager'
 
+import { InvalidParamsError, TransferProtocol } from 'Types'
 import {
-  InvalidParamsError,
   handleRequest,
   handleHttpsRequest,
-} from 'requestHandler'
-import { TransferProtocol } from 'Types'
+} from 'Utils'
 
 dotEnvConfig()
 
