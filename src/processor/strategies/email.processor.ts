@@ -1,15 +1,43 @@
-import { Message, ProcessResponse } from "Types"
+import { Transporter, createTransport } from "nodemailer"
+
+import { Message } from "Types"
 
 import Processor from "../processor"
 
+class EmailProcessorError extends Error {}
+
 class EmailProcessor implements Processor {
-  public process(message: Message): ProcessResponse {
+  private transporter: Transporter
+  constructor() {
+    this.transporter = createTransport({
+      host: process.env.MAIL_HOST,
+      port: Number(process.env.MAIL_PORT),
+      auth: {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASSWORD,
+      },
+    })
+  }
+
+  public async process(message: Message) {
     console.log("EMAIL | processing =>", message)
-    if (Math.random() >= 0.5) {
-      console.error("Error processing message")
-      throw new Error("Message rejected") 
+    const { content } = message    
+
+    if (!content["recipient"])
+      throw new EmailProcessorError("Missing recipient on message content")
+    if (!content["sender"])
+      throw new EmailProcessorError("Missing sender on message content")
+    if (!content["mailContent"])
+      throw new EmailProcessorError("Missing mailContent on message content")
+
+    const mailOptions = {
+      to: content["recipient"],
+      from: content["sender"],
+      subject: content["subject"],
+      text: content["mailContent"],
     }
-    return "not implemented"
+
+    return await this.transporter.sendMail(mailOptions)
   }
 }
 

@@ -11,8 +11,6 @@ import {
 } from "./strategies"
 
 class BaseProcessor implements Processor {
-  static sharedInstance = new BaseProcessor()
-
   private emailProcessor = new EmailProcessor()
   private fsProcessor = new FileSystemProcessor()
   private gqlProcessor = new GraphQLProcessor()
