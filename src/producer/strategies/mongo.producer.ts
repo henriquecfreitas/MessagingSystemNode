@@ -1,6 +1,6 @@
 import Producer from "../producer";
 
-class MongoProducer implements Producer {
+class MongoProducer extends Producer {
   public publish() {
     throw new Error("Method not implemented.")
   }

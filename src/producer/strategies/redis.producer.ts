@@ -1,10 +1,16 @@
+import { RedisClientType } from "redis"
+
 import { Message, TransferProtocol } from "Types"
 
 import Producer, { PublishParams } from "../producer"
 
-class InMemoProducer extends Producer {
-  constructor(private messages: Message[]) {
+class RedisProducer extends Producer {
+  constructor(private client: RedisClientType) {
     super()
+  }
+
+  private async pushMessage(message: Message) {
+    await this.client.rPush("messages", JSON.stringify(message))
   }
 
   public publish({
@@ -12,7 +18,7 @@ class InMemoProducer extends Producer {
     senderId,
     content
   }: PublishParams) {
-    this.messages.push({
+    this.pushMessage({
       id: this.id(),
       processor,
       origin: {
@@ -32,7 +38,7 @@ class InMemoProducer extends Producer {
     }: PublishParams,
     transferProtocol: TransferProtocol
   ) {
-    this.messages.push({
+    this.pushMessage({
       id: this.id(),
       processor,
       origin: {
@@ -45,4 +51,4 @@ class InMemoProducer extends Producer {
   }
 }
 
-export default InMemoProducer
+export default RedisProducer

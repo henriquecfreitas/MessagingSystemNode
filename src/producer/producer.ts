@@ -1,3 +1,5 @@
+import { nanoid } from "nanoid"
+
 import { ProcessorKind, TransferProtocol } from "Types"
 
 export type PublishParams = {
@@ -13,6 +15,10 @@ abstract class Producer {
     params: PublishParams,
     transferProtocol: TransferProtocol.HTTP | TransferProtocol.HTTPS
   ): void
+
+  protected id() {
+    return nanoid(13)
+  }
 }
 
 export default Producer

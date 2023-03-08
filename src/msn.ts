@@ -6,6 +6,7 @@ import {
   Manager,
   InMemoManagerStrategy,
   MongoManagerStrategy,
+  RedisManagerStrategy,
 } from 'Manager'
 
 import { InvalidParamsError, TransferProtocol } from 'Types'
@@ -22,6 +23,9 @@ switch (process.env.STORAGE_STRATEGY) {
     break
   case "MONGO":
     Manager.sharedInstance = new MongoManagerStrategy()
+    break
+  case "REDIS":
+    Manager.sharedInstance = new RedisManagerStrategy()
     break
 }
 
@@ -48,6 +52,7 @@ async function serve(
       response.end(error.message)
       return
     }
+    console.error(error)
     response.statusCode = 500
     response.end()
   }

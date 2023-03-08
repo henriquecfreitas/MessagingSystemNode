@@ -19,7 +19,9 @@ class InMemoManager implements Manager {
   }
 
   public clear() {
-    throw new Error('Method not implemented.')
+    this.messages.length = 0
+    this.archive.length = 0
+    this.deadLetter.length = 0
   }
 
   public print() {
