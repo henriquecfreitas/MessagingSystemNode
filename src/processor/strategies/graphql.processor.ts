@@ -1,15 +1,33 @@
-import { Message, ProcessResponse } from "Types"
+import { Message } from "Types"
+import { sendRequest } from "Utils"
 
 import Processor from "../processor"
 
+class GraphQLProcessorError extends Error {}
+
 class GraphQLProcessor implements Processor {
-  public process(message: Message): ProcessResponse {
+  public async process(message: Message) {
     console.log("GQL | processing =>", message)
-    if (Math.random() >= 0.5) {
-      console.error("Error processing message")
-      throw new Error("Message rejected") 
+    const { content } = message
+
+    if (!content["url"])
+      throw new GraphQLProcessorError("Missing GraphQL server's URL on message content")
+    if (!content["query"])
+      throw new GraphQLProcessorError("Missing GraphQL query on message content")
+
+    const url = new URL(content["url"])
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
     }
-    return "not implemented"
+
+    const data = JSON.stringify({
+      query: content["query"],
+    })
+
+    return await sendRequest(url, options, data)
   }
 }
 

@@ -1,3 +1,4 @@
+export { InvalidParamsError } from "./errors"
 export { default as Message } from "./message"
 export { default as ProcessedMessage, ProcessResponse } from "./processedMessage"
 export { default as ProcessorKind } from "./processorKind"

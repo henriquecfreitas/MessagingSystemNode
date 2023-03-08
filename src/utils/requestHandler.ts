@@ -1,11 +1,9 @@
 import { IncomingMessage } from "http"
 
-import { TransferProtocol } from "Types"
+import { InvalidParamsError, TransferProtocol } from "Types"
 import { Manager } from "Manager"
 
-import promisifyReadableOnEnd from "promisifyReadableOnEnd"
-
-export class InvalidParamsError extends Error {}
+import promisifyReadableOnEnd from "./promisifyReadableOnEnd"
 
 const isObject = (dataString: any) =>
   typeof dataString === 'object' &&
