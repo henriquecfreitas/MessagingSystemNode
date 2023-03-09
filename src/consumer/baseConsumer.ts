@@ -2,10 +2,10 @@ import { Message, ProcessResponse } from "Types"
 import { BaseProcessor, Processor } from "Processor"
 import { Manager } from "Manager"
 
-import Consumer from "./consumer"
+import Consumer, { NextMessage } from "./consumer"
 
 abstract class BaseConsumer implements Consumer {
-  public abstract retireveNextMessage(): Message | undefined
+  public abstract retireveNextMessage(): NextMessage
   public abstract archiveMessage(message: Message, response: ProcessResponse): void
   public abstract rejectMessage(message: Message, error: unknown): void
 
@@ -24,7 +24,7 @@ abstract class BaseConsumer implements Consumer {
   }
 
   private async consumeMessage() {
-    const message = this.retireveNextMessage()
+    const message = await this.retireveNextMessage()
     if (message) {
       console.log("consuming =>", message)
 
